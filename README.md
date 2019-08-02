@@ -1,6 +1,7 @@
-# Data-Driven Research Paper
+# Data Driven Research-Paper
+![img](ddrp-icon200.png)
 
-Doing Data re: Python
+(In Python and Latex)
 
 
 ## What this is:
@@ -10,7 +11,7 @@ Doing Data re: Python
 ## How to use this repository
 
 ### Conda Environment
-Have Anaconda installed (recommend Miniconda) and accessible via PATH (`conda` should work in your terminal). These instructions assume `condaRather than install each package as you need it it *directly*, we are going to be using an environment YAML file to keep track of all major dependencies you rely on. This will help you and others recreate the environment in the future.
+Have Anaconda installed (recommend Miniconda) and accessible via PATH (`conda` should work in your terminal). These instructions assume `conda>=4.6`. Rather than install each package as you need it it *directly*, we are going to be using an environment YAML file to keep track of all major dependencies you rely on. This will help you and others recreate the environment in the future.
 
 To start, open the `environment.yml` file in the top-lvl directory. 
 
