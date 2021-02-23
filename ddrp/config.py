@@ -9,9 +9,10 @@ from pathlib import Path
 class Paper:
     git_url: Optional[str]
     folder: str
-    column_width: float
     text_width: float
     text_height: float
+    columns: int
+    column_width: float
 
 
 @dataclass
@@ -46,4 +47,4 @@ def config_context(type_hooks: Optional[Dict] = None) -> DDRPConfig:
     yml_loc = Path("ddrp.yml")
     with yml_loc.open() as fp:
         config_dict = yaml.safe_load(fp)
-    return from_dict(data_class=DDRPConfig, data=config_dict)
+    return from_dict(data_class=DDRPConfig, data=config_dict, type_hooks=type_hooks)
