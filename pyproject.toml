@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "ddr-p"
+version = "0.1.0"
+description = "data-driven research papers, making use of Python and LaTeX for automation and reproducibility."
+authors = ["Thurston Sexton <thurston.sexton@nist.gov>"]
+packages = [
+         { include = "ddrp" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+cookiecutter = "^1.7.2"
+
+[tool.poetry.dev-dependencies]
+mkdocs-material = "^7.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

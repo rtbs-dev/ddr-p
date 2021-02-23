@@ -1,5 +1,5 @@
 # Data Driven Research-Paper
-![img](ddrp-icon-shadow.png)
+![img](docs/images/ddrp-icon-shadow.png)
 
 (In Python and Latex)
 

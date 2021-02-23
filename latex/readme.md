@@ -1,1 +1,0 @@
-This is where latex submodules should go.
