@@ -1,6 +1,6 @@
 from typing import List, Dict, Union, Optional
 import yaml
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from dacite import from_dict
 from pathlib import Path
 
@@ -9,11 +9,20 @@ from pathlib import Path
 class Paper:
     git_url: Optional[str]
     folder: str
-    text_width: float
-    text_height: float
     columns: int
-    column_width: float
+    column_width_pt: float
+    text_width_pt: float
+    text_height_pt: float
+    column_width: float = field(init=False)
+    text_width: float = field(init=False)
+    text_height: float = field(init=False)
     dpi: int = 200
+
+    def __post_init__(self):
+        """need to turn pts to inches"""
+        self.column_width = self.column_width_pt / 72.47
+        self.text_with = self.text_width_pt / 72.47
+        self.text_height = self.text_height_pt / 72.47
 
 
 @dataclass
