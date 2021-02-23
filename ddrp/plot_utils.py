@@ -8,11 +8,6 @@ import seaborn as sns
 from .config import config_context
 
 
-""" modified from: 
-https://github.com/Wookai/paper-tips-and-tricks/blob/master/src/python/
-"""
-
-
 def figure_setup(papernum=0):
     """Set all the sizes to the correct values.
     TODO: use tex fonts for all texts, if installed

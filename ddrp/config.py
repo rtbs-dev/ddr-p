@@ -13,6 +13,7 @@ class Paper:
     text_height: float
     columns: int
     column_width: float
+    dpi: int = 200
 
 
 @dataclass
