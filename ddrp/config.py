@@ -1,6 +1,6 @@
 from typing import List, Dict, Union, Optional
 from srsly import read_yaml
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, InitVar
 from dacite import from_dict
 from pathlib import Path
 
@@ -10,19 +10,19 @@ class Paper:
     git_url: Optional[str]
     folder: str
     columns: int
-    column_width_pt: float
-    text_width_pt: float
-    text_height_pt: float
+    column_width_pt: InitVar[float]
+    text_width_pt: InitVar[float]
+    text_height_pt: InitVar[float]
     column_width: float = field(init=False)
     text_width: float = field(init=False)
     text_height: float = field(init=False)
     dpi: int = 200
 
-    def __post_init__(self):
+    def __post_init__(self, column_width_pt, text_width_pt, text_height_pt):
         """need to turn pts to inches"""
-        self.column_width = self.column_width_pt / 72.47
-        self.text_with = self.text_width_pt / 72.47
-        self.text_height = self.text_height_pt / 72.47
+        self.column_width = column_width_pt / 72.47
+        self.text_width = text_width_pt / 72.47
+        self.text_height = text_height_pt / 72.47
 
 
 @dataclass
@@ -40,7 +40,7 @@ class DDRPConfig:
     figure_setup: Figure
 
 
-def config_context(type_hooks: Optional[Dict] = None) -> DDRPConfig:
+def config_context(dacite_config: Optional[Dict] = None) -> DDRPConfig:
     """
     Retrieve a structured representation of the current ddrp.yml config.
 
@@ -55,6 +55,5 @@ def config_context(type_hooks: Optional[Dict] = None) -> DDRPConfig:
     DDRPConfig, a dataclass containing structured type-checked config options.
     """
     yml_loc = Path("ddrp.yml")
-    with yml_loc.open() as fp:
-        config_dict = read_yaml(fp)
-    return from_dict(data_class=DDRPConfig, data=config_dict, type_hooks=type_hooks)
+    config_dict = read_yaml(yml_loc)
+    return from_dict(data_class=DDRPConfig, data=config_dict, config=dacite_config)
