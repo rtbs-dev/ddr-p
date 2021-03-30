@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ddr-p"
-version = "0.1.0"
+version = "0.1.1"
 description = "data-driven research papers, making use of Python and LaTeX for automation and reproducibility."
 authors = ["Thurston Sexton <thurston.sexton@nist.gov>"]
 packages = [
@@ -13,6 +13,7 @@ cookiecutter = "^1.7.2"
 seaborn = "^0.11.1"
 numpy = "^1.20.1"
 dacite = "^1.6.0"
+srsly = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
 mkdocs-material = "^7.0.0"

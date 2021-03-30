@@ -1,5 +1,5 @@
 from typing import List, Dict, Union, Optional
-import yaml
+from srsly import read_yaml
 from dataclasses import dataclass, field
 from dacite import from_dict
 from pathlib import Path
@@ -56,5 +56,5 @@ def config_context(type_hooks: Optional[Dict] = None) -> DDRPConfig:
     """
     yml_loc = Path("ddrp.yml")
     with yml_loc.open() as fp:
-        config_dict = yaml.safe_load(fp)
+        config_dict = read_yaml(fp)
     return from_dict(data_class=DDRPConfig, data=config_dict, type_hooks=type_hooks)
