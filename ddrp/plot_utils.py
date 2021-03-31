@@ -56,11 +56,10 @@ def figsize(fig_width=None, fig_height=None, papernum=0, aspect="phi"):
         raise TypeError("`aspect` must be one of {'phi', 'square'} or `float`")
 
     if fig_width is None:
-        fig_width = (
-            paper_config.column_width
-            if paper_config.columns == 1
-            else paper_config.text_width
-        )
+        if paper_config.columns == 2:
+            fig_width = paper_config.column_width
+        else:
+            fig_width = paper_config.text_width
 
     if fig_height is None:
         fig_height = fig_width / aspect
