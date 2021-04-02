@@ -14,26 +14,29 @@ def figure_setup(papernum=0):
     """
     figure_setup = config_context().figure_setup
     # This sets reasonable defaults for font size in a paper
-    sns.set_context("paper")
+    # sns.set_context("paper")
     # Set the font to be serif, rather than sans
-    sns.set(font="serif")
+    # sns.set(font="serif")
     # Make the background white, and specify the specific font family
-    sns.set_style(
-        "white",
-        {
-            "font.family": "serif",
-            "font.serif": ["Times", "Palatino", "serif"],
-            "figure.dpi": 200,
-            "font.size": figure_setup.font_size,
-            "legend.fontsize": figure_setup.label_size,
-            "figure.titlesize": figure_setup.font_size,
-            "axes.titlesize": figure_setup.font_size,
-            "axes.labelsize": figure_setup.label_size,
-            "axes.linewidth": figure_setup.axis_lw,
-            "legend.fontsize": figure_setup.font_size,
-            "xtick.labelsize": figure_setup.ticks_size,
-            "ytick.labelsize": figure_setup.ticks_size,
-        },
+    rcparams = {
+        # "font.serif": ["Times", "Palatino", "serif"],
+        "figure.dpi": 200,
+        "font.size": figure_setup.font_size,
+        "legend.fontsize": figure_setup.label_size,
+        "figure.titlesize": figure_setup.font_size,
+        "axes.titlesize": figure_setup.font_size,
+        "axes.labelsize": figure_setup.label_size,
+        "axes.linewidth": figure_setup.axis_lw,
+        "legend.fontsize": figure_setup.font_size,
+        "xtick.labelsize": figure_setup.ticks_size,
+        "ytick.labelsize": figure_setup.ticks_size,
+    }
+
+    sns.set_theme(
+        context="paper",
+        style="white",
+        font="serif",
+        rc=rcparams,
     )
 
 
@@ -60,7 +63,10 @@ def figsize(fig_width=None, fig_height=None, papernum=0, aspect="phi"):
             fig_width = paper_config.column_width
         else:
             fig_width = paper_config.text_width
-
+    if fig_width is "full":
+        fig_width = paper_config.text_width
+    if fig_width is "column":
+        fig_width = paper_config.column_width
     if fig_height is None:
         fig_height = fig_width / aspect
 
