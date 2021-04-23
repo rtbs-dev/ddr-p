@@ -1,0 +1,16 @@
+papers:
+  paper1:
+    pubtype: 'paper'
+    folder: "."
+    width: "505.89 tex_point"
+    height: "650.43 tex_point"
+    columns: 2
+    column_width: "243.91125 tex_point"
+  pub2:
+    pubtype: 'talk'
+    folder: "."
+    width: "40 cm"
+    height: "20 cm" 
+    fig_settings:
+      font_family: 'sans'
+      dpi: 300
