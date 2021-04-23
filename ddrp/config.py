@@ -1,11 +1,24 @@
 from typing import List, Dict, Union, Optional
+
 from srsly import read_yaml
 from pydantic.dataclasses import dataclass
-from pydantic import BaseModel, BaseSettings, DirectoryPath, AnyHttpUrl
-from dataclasses import field, InitVar
-from dacite import from_dict, Config
+from pydantic import (
+    BaseModel,
+    BaseSettings,
+    DirectoryPath,
+    AnyHttpUrl,
+    PositiveFloat,
+    validator,
+    constr,
+)
 from pathlib import Path
 from enum import Enum, IntEnum
+from pint import UnitRegistry
+
+ureg = UnitRegistry()
+Q = ureg.Quantity
+Q_str = constr(regex="^[0-9]+.?[0-9]*\\s?[a-zA-Z_]+")
+AcceptableDist = Union[PositiveFloat, Q_str, Q]
 
 
 class PubType(str, Enum):
@@ -25,39 +38,62 @@ class FigureSettings:
     label_size: int = 8
     font_size: int = 8
     ticks_size: int = 6
-    axis_lw: float = 0.6
-    plot_lw: float = 1.5
+    axis_lw: PositiveFloat = 0.6
+    plot_lw: PositiveFloat = 1.5
     font_family: str = "serif"
 
 
-@dataclass
-class Publication:
+def norm_distance_to_in(d: AcceptableDist) -> PositiveFloat:
+    def to_quantity_inch(d: AcceptableDist) -> Q:
+        if isinstance(d, str):
+            d = Q(d)
+        else:
+            d = Q(d, "inch")
+        return d
+
+    q = to_quantity_inch(d)
+    assert q.magnitude > 0
+
+    return q.to("in").magnitude
+
+
+class Publication(BaseSettings):
     pubtype: PubType
     folder: DirectoryPath
+    height: PositiveFloat
+    width: PositiveFloat
     git_url: Optional[AnyHttpUrl]
     fig_settings: Optional[FigureSettings]
 
+    _norm_dim_to_inch = validator(
+        "height", "width", pre=True, always=True, allow_reuse=True
+    )(norm_distance_to_in)
 
-@dataclass
+
 class Paper(Publication):
-    columns: PaperColumns
-    column_width_pt: InitVar[float]
-    text_width_pt: InitVar[float]
-    text_height_pt: InitVar[float]
-    column_width: float = field(init=False)
-    text_width: float = field(init=False)
-    text_height: float = field(init=False)
+    pubtype: PubType = PubType.paper
+    columns: PaperColumns = PaperColumns.single
+    column_width: PositiveFloat = None
 
-    def __post_init__(self, column_width_pt, text_width_pt, text_height_pt):
-        """need to turn pts to inches"""
-        self.column_width = column_width_pt / 72.47
-        self.text_width = text_width_pt / 72.47
-        self.text_height = text_height_pt / 72.47
+    @validator("pubtype", pre=True, always=True)
+    def coerce_pubtype(cls, typ):
+        return PubType.paper
+
+    @validator("column_width", pre=True, always=True)
+    def col_leq_width(cls, colw, values):
+        print(values)
+        if colw == None and values["columns"] == 1:
+            colw = values["width"]
+        elif colw == None:
+            raise TypeError("Must pass column width for 2-column papers!")
+        colw = norm_distance_to_in(colw)
+        assert colw <= values["width"], "column width must be strictly less than width"
+        return colw
 
 
 class Publications(BaseModel):
-    __root__: Dict[str, Publication]
-
+    __root__: Dict[str, Union[Paper, Publication]]
+    # TODO: Discover w/ plugin system
     def __iter__(self):
         return iter(self.__root__)
 
@@ -65,25 +101,13 @@ class Publications(BaseModel):
         return self.__root__[item]
 
 
-class DDRPConfig(BaseSettings):
+class DDRPRegistry(BaseModel):
     papers: Publications
-    fig_settingr: Optional[FigureSettings] = FigureSettings()
+    fig_settings: Optional[FigureSettings] = FigureSettings()
 
 
-def config_context(dacite_config: Optional[Config] = None) -> DDRPConfig:
-    """
-    Retrieve a structured representation of the current ddrp.yml config.
+def config_context() -> DDRPRegistry:
 
-    Parameters
-    ----------
-    type_hooks : dict
-        type -> callable mappings, instrtucting the constructor to apply the
-        passed function to all data of that type. e.g. {str: str.lower}
-
-    Returns
-    -------
-    DDRPConfig, a dataclass containing structured type-checked config options.
-    """
     yml_loc = Path("ddrp.yml")
     config_dict = read_yaml(yml_loc)
-    return from_dict(data_class=DDRPConfig, data=config_dict, config=dacite_config)
+    return DDRPRegistry.parse_obj(config_dict)

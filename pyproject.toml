@@ -16,9 +16,12 @@ dacite = "^1.6.0"
 srsly = "^2.4.0"
 Inject = "^4.3.1"
 pydantic = "^1.8.1"
+Pint = "^0.17"
 
 [tool.poetry.dev-dependencies]
 mkdocs-material = "^7.0.0"
+hypothesis = "^6.10.0"
+pytest = "^6.2.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
