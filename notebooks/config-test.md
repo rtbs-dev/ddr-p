@@ -63,5 +63,15 @@ DDRPRegistry.parse_obj(cfg_raw).dict()
 ```
 
 ```python
-validator
+for paper in DDRPRegistry.parse_obj(cfg_raw).papers:
+    pprint(paper)
+    print('hi')
+```
+
+```python
+DDRPRegistry.parse_obj(cfg_raw).papers[0]
+```
+
+```python
+
 ```

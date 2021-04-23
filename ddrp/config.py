@@ -81,7 +81,6 @@ class Paper(Publication):
 
     @validator("column_width", pre=True, always=True)
     def col_leq_width(cls, colw, values):
-        print(values)
         if colw == None and values["columns"] == 1:
             colw = values["width"]
         elif colw == None:
@@ -98,6 +97,8 @@ class Publications(BaseModel):
         return iter(self.__root__)
 
     def __getitem__(self, item):
+        if isinstance(item, int):
+            item = list(self.__root__.keys())[item]
         return self.__root__[item]
 
 

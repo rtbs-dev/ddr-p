@@ -12,7 +12,8 @@ def figure_setup(papernum=0):
     """Set all the sizes to the correct values.
     TODO: use tex fonts for all texts, if installed
     """
-    figure_setup = config_context().figure_setup
+    cfg = config_context().papers[papernum]
+    figure_setup = cfg.fig_settings
     # This sets reasonable defaults for font size in a paper
     # sns.set_context("paper")
     # Set the font to be serif, rather than sans
@@ -20,22 +21,22 @@ def figure_setup(papernum=0):
     # Make the background white, and specify the specific font family
     rcparams = {
         # "font.serif": ["Times", "Palatino", "serif"],
-        "figure.dpi": 200,
+        "figure.dpi": figure_setup.dpi,
         "font.size": figure_setup.font_size,
-        "legend.fontsize": figure_setup.label_size,
         "figure.titlesize": figure_setup.font_size,
         "axes.titlesize": figure_setup.font_size,
-        "axes.labelsize": figure_setup.label_size,
-        "axes.linewidth": figure_setup.axis_lw,
         "legend.fontsize": figure_setup.font_size,
+        "legend.fontsize": figure_setup.label_size,
+        "axes.labelsize": figure_setup.label_size,
         "xtick.labelsize": figure_setup.ticks_size,
         "ytick.labelsize": figure_setup.ticks_size,
+        "axes.linewidth": figure_setup.axis_lw,
     }
 
     sns.set_theme(
-        context="paper",
+        context=cfg.pubtype,
         style="white",
-        font="serif",
+        font=figure_setup.font_family,
         rc=rcparams,
     )
 
@@ -73,9 +74,10 @@ def figsize(fig_width=None, fig_height=None, papernum=0, aspect="phi"):
     return fig_width, fig_height
 
 
-def save_fig(fig, file_name, fmt=None, dpi=300, tight=True):
+def save_fig(fig, file_name, fmt=None, tight=True, papernum=0):
     """Save a Matplotlib figure as EPS/PNG/PDF to the given path and trim it."""
-
+    cfg = config_context().papers[papernum]
+    fig_cfg = cfg.fig_settings
     if not fmt:
         fmt = file_name.suffix  # pathlib
 
@@ -91,9 +93,9 @@ def save_fig(fig, file_name, fmt=None, dpi=300, tight=True):
 
     # save figure
     if tight:
-        fig.savefig(tmp_name, dpi=dpi, bbox_inches="tight")
+        fig.savefig(tmp_name, dpi=fig_cfg.dpi, bbox_inches="tight")
     else:
-        fig.savefig(tmp_name, dpi=dpi)
+        fig.savefig(tmp_name, dpi=fig_cfg.dpi)
 
     # trim it
     if fmt == ".eps":
