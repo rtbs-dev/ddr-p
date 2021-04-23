@@ -1,4 +1,4 @@
-from typing import List, Dict, Union, Optional
+from typing import Dict, Union, Optional
 
 from srsly import read_yaml
 from pydantic.dataclasses import dataclass
