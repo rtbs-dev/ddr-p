@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ddr-p"
-version = "0.2.0"
+version = "0.2.1"
 description = "data-driven research papers, making use of Python and LaTeX for automation and reproducibility."
 authors = ["Thurston Sexton <thurston.sexton@nist.gov>"]
 packages = [
