@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 import seaborn as sns
 
-from .config import config_context
+from .config import config_context, Paper
 
 
 def figure_setup(papernum=0):
@@ -60,12 +60,12 @@ def figsize(fig_width=None, fig_height=None, papernum=0, aspect="phi"):
         raise TypeError("`aspect` must be one of {'phi', 'square'} or `float`")
 
     if fig_width is None:
-        if paper_config.columns == 2:
+        if isinstance(paper_config.pubtype, Paper) & paper_config.columns == 2:
             fig_width = paper_config.column_width
         else:
-            fig_width = paper_config.text_width
+            fig_width = paper_config.width
     if fig_width is "full":
-        fig_width = paper_config.text_width
+        fig_width = paper_config.width
     if fig_width is "column":
         fig_width = paper_config.column_width
     if fig_height is None:

@@ -1,7 +1,8 @@
 from typing import Dict, Union, Optional
 
 from srsly import read_yaml
-from pydantic.dataclasses import dataclass
+
+# from pydantic.dataclasses import dataclass
 from pydantic import (
     BaseModel,
     BaseSettings,
@@ -32,8 +33,7 @@ class PaperColumns(IntEnum):
     double = 2
 
 
-@dataclass
-class FigureSettings:
+class FigureSettings(BaseModel):
     dpi: int = 200
     label_size: int = 8
     font_size: int = 8
